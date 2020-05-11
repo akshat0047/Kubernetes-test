@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: django-svc
+  labels:
+    app: yaksh-django
+spec:
+  selector:
+    app: django
+  type: NodePort
+  clusterIP: 10.98.33.135
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 31000
+    protocol: TCP

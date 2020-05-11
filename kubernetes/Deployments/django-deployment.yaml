@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  labels:
+    app: django
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      name: yaksh-django-pod
+      labels:
+        app: django
+    spec:
+      containers:
+      - name: yaksh-django
+        image: akshat0047/yaksh-django:v1
+        imagePullPolicy: Always
+        envFrom:
+        - configMapRef:
+            name: yaksh-config
+        volumeMounts:
+        - mountPath: /Sites/online_test/yaksh_data
+          name: django-mount
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: django-mount
+        hostPath:
+          path: /mnt/nfs/yaksh_data

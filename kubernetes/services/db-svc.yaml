@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yaksh-db
+spec:
+  type: ClusterIP
+  clusterIP: 10.110.179.195
+  ports:
+  - name: yaksh-db
+    port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: db-mariadb

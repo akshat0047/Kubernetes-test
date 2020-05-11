@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codeserver-deployment
+  labels:
+    app: codeserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: codeserver
+  template:
+    metadata:
+      name: yaksh-codeserver-pod
+      labels:
+        app: codeserver
+    spec:
+      hostname: yaksh-codeserver
+      containers:
+      - name: yaksh-codeserver
+        image: akshat0047/yaksh-codeserver:v1
+        envFrom:
+        - configMapRef:
+            name: yaksh-config
+        volumeMounts:
+        - mountPath: /Sites/online_test/yaksh_data
+          name: django-mount
+        ports:
+        - containerPort: 55555
+          name: yaksh-code
+      volumes:
+      - name: django-mount
+        hostPath:
+          path: /mnt/nfs/yaksh_data
+
+
+
+   
+

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+  labels:
+    app: db-mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-mariadb
+  template:
+    metadata:
+      name: yaksh-db-pod
+      labels:
+        app: db-mariadb
+    spec:
+      hostname: yaksh-db
+      containers:
+      - name: yaksh-db
+        image: mariadb:10.2
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-secret
+                key: root_passwd
+          
+          - name: MYSQL_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: db-secret
+                key: database
+        volumeMounts:
+        - mountPath: /var/lib/mysql
+          name: db-volume    
+        ports:
+        - containerPort: 3306       
+          name: yaksh-db
+      volumes:
+      - name: db-volume
+        hostPath:
+          path: /mnt/nfs/mysql
+
+      
