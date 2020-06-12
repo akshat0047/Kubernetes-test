@@ -1,0 +1,25 @@
+FROM centos:latest
+
+MAINTAINER FOSSEE <pythonsupport@fossee.in>
+
+RUN dnf update -y && yum install epel-release python3-devel git python3-pip vim mariadb-devel sudo -y
+
+RUN yum install mod_wsgi httpd gcc make -y 
+
+RUN mkdir -p /Sites/online_test
+
+COPY . /Sites/online_test
+
+RUN pip3 install -r /Sites/online_test/requirements/requirements-production.txt 
+
+COPY docker/Files/000-default.conf /etc/httpd/conf.d
+
+COPY docker/Files/Docker-script.sh /Sites/Docker-script.sh
+
+EXPOSE 80
+
+WORKDIR /Sites/online_test
+
+RUN mkdir -p yaksh_data/output yaksh_data/data
+
+CMD [ "/bin/bash" , "/Sites/Docker-script.sh" ] 
